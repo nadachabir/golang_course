@@ -1,0 +1,20 @@
+# Compiled binaries
+/bin/
+*.exe
+taskflow
+
+# Local secrets / env (committed template lives in .env.example)
+.env
+
+# Test & coverage output
+*.test
+*.out
+coverage.*
+
+# Dependencies vendored locally (we use the module cache, not vendoring)
+/vendor/
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store

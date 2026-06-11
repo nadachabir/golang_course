@@ -1,0 +1,45 @@
+# Local infrastructure for TaskFlow: PostgreSQL + Keycloak.
+# Start it (Phase 4 onward) with:  make docker-up
+# Stop it with:                    make docker-down
+#
+# Defaults below fall back if .env is missing, but `make docker-up` passes
+# --env-file .env so your values win.
+
+name: taskflow
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: taskflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-taskflow}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-taskflow}
+      POSTGRES_DB: ${DB_NAME:-taskflow}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-taskflow} -d ${DB_NAME:-taskflow}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: taskflow-keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 8080
+    ports:
+      - "8081:8080"   # Keycloak console at http://localhost:8081 (app uses 8080)
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

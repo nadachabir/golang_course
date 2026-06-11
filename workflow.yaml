@@ -1,0 +1,26 @@
+# Workflow rules for TaskFlow.
+# Loaded by internal/config/workflow.go (a SEPARATE Viper instance) — Phases 2 & 5.
+# The service layer (Phase 5) uses these to validate task status/priority and
+# to reject illegal status transitions.
+
+# Allowed task statuses.
+statuses:
+  - todo
+  - in_progress
+  - in_review
+  - done
+
+# Allowed task priorities (low -> urgent).
+priorities:
+  - low
+  - medium
+  - high
+  - urgent
+
+# Allowed status transitions: from -> [permitted next states].
+# Example: a "todo" task may only move to "in_progress".
+transitions:
+  todo:        [in_progress]
+  in_progress: [in_review, todo]
+  in_review:   [done, in_progress]
+  done:        []
