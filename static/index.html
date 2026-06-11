@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskFlow</title>
+  <style>
+    :root {
+      --bg:#0f172a; --card:#1e293b; --fg:#e2e8f0; --muted:#94a3b8;
+      --accent:#6366f1; --ok:#22c55e; --err:#ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--fg);
+    }
+    .card {
+      background: var(--card); padding: 2rem 2.5rem; border-radius: 16px;
+      width: 90%; max-width: 560px; box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    }
+    h1 { margin: 0 0 .25rem; font-size: 1.6rem; }
+    .tag { color: var(--accent); font-weight: 600; }
+    p.sub { color: var(--muted); margin-top: 0; line-height: 1.5; }
+    .status {
+      display:flex; align-items:center; gap:.6rem; margin:1.25rem 0;
+      padding:.75rem 1rem; background: rgba(255,255,255,.04); border-radius:10px;
+    }
+    .dot { width:12px; height:12px; border-radius:50%; background: var(--muted); transition: background .2s; }
+    .dot.ok  { background: var(--ok);  box-shadow: 0 0 10px var(--ok); }
+    .dot.err { background: var(--err); box-shadow: 0 0 10px var(--err); }
+    code { background: rgba(255,255,255,.08); padding:.1rem .4rem; border-radius:6px; font-size:.85em; }
+    ol { color: var(--muted); line-height: 1.7; padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>TaskFlow <span class="tag">· Phase 0</span></h1>
+    <p class="sub">A minimal Jira-like task manager — your Go learning project.</p>
+
+    <div class="status">
+      <span id="dot" class="dot"></span>
+      <span id="statusText">Checking API health…</span>
+    </div>
+
+    <p class="sub">
+      This page is your live test surface — you'll extend it after every phase.
+      Right now it pings <code>GET /health</code>, an endpoint you will build in
+      <strong>Phase 1</strong>.
+    </p>
+    <ol>
+      <li>Build the HTTP server and <code>/health</code> in Phase 1.</li>
+      <li>Run the server, open this page, and watch the dot turn
+          <span style="color:var(--ok)">green</span>.</li>
+    </ol>
+  </main>
+
+  <script>
+    async function checkHealth() {
+      const dot = document.getElementById('dot');
+      const text = document.getElementById('statusText');
+      try {
+        const res = await fetch('/health', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const body = await res.json().catch(() => ({}));
+        const status = body && body.data && body.data.status ? ' — ' + body.data.status : '';
+        dot.className = 'dot ok';
+        text.textContent = 'API healthy' + status;
+      } catch (err) {
+        dot.className = 'dot err';
+        text.textContent = 'API offline — build /health in Phase 1 (' + err.message + ')';
+      }
+    }
+    checkHealth();
+    setInterval(checkHealth, 5000);
+  </script>
+</body>
+</html>
