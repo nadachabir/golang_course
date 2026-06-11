@@ -8,5 +8,7 @@ package main
 import "fmt"
 
 func main() {
+	fmt.Println("hello go")
 	fmt.Println("TaskFlow API — Phase 0 scaffold. Build the HTTP server in Phase 1.")
 }
+
