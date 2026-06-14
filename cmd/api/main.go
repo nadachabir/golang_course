@@ -5,10 +5,27 @@
 // (config, logger, router) and listens for requests.
 package main
 
-import "fmt"
+import (
+	"github.com/wchabir/taskflow/internal/handler"
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"os/signal"
+	"context"
+	"os"
+	"syscall"
+	"time"
+
+)
 
 func main() {
-	fmt.Println("Hello GO practitioner")
-	fmt.Println("TaskFlow API — Phase 0 scaffold. Build the HTTP server in Phase 1.")
+	r := gin.Default()
+	r.GET("/health", handler.Health) 
+	r.StaticFile("/", "./static/index.html")
+	srv := &http.Server{Addr: ":8080", Handler: r}
+	go srv.ListenAndServe() 
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM); defer stop(); <-ctx.Done()
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	srv.Shutdown(shutdownCtx)
 }
 
