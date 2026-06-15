@@ -117,7 +117,12 @@ full directory tree (each Go package has a `doc.go` describing its job), the
 the `static/index.html` frontend shell that pings `GET /health`. Verified with
 `go build`, `go vet`, `gofmt`, and `make help`.
 
-## Phase 1 — HTTP server foundations (Gin) 🚧
+## Phase 1 — HTTP server foundations (Gin) ✅
+
+*Done 2026-06-15.* Gin server with `/health` (envelope `{"data":{"status":"ok"}}`),
+static frontend at `/`, and graceful shutdown via `signal.NotifyContext` +
+`srv.Shutdown`. Reviewed: all edge cases pass; `ListenAndServe` errors are logged
+(verified the port-in-use path exits `1` instead of hanging), shutdown is logged.
 
 **Goal.** Replace the placeholder in `cmd/api/main.go` with a real **Gin** HTTP
 server that (1) serves `GET /health` → `{"data":{"status":"ok"}}`, (2) serves
