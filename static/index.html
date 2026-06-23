@@ -35,7 +35,7 @@
 </head>
 <body>
   <main class="card">
-    <h1>TaskFlow <span class="tag">· Phase 0</span></h1>
+    <h1>TaskFlow <span class="tag">· Phase 1 ✓</span></h1>
     <p class="sub">A minimal Jira-like task manager — your Go learning project.</p>
 
     <div class="status">
@@ -44,14 +44,14 @@
     </div>
 
     <p class="sub">
-      This page is your live test surface — you'll extend it after every phase.
-      Right now it pings <code>GET /health</code>, an endpoint you will build in
-      <strong>Phase 1</strong>.
+      Your Gin server is live and <code>GET /health</code> works — the dot above
+      is <span style="color:var(--ok)">green</span>. This page is your live test
+      surface; it grows with every phase.
     </p>
     <ol>
-      <li>Build the HTTP server and <code>/health</code> in Phase 1.</li>
-      <li>Run the server, open this page, and watch the dot turn
-          <span style="color:var(--ok)">green</span>.</li>
+      <li><s>Phase 1 — Gin server, <code>/health</code>, graceful shutdown</s> ✓</li>
+      <li>Next: Phase 2 — config &amp; structured logging (no UI change yet).</li>
+      <li>Phase 3 — this page becomes a real task list (create / list tasks).</li>
     </ol>
   </main>
 
